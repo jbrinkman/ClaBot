@@ -3,6 +3,10 @@
 
 @import "jekyll-theme-modernist";
 
+.wrapper {
+    width: 100%;
+}
+
 @media (min-width: 576px) {
     .wrapper {
         max-width: 540px;
