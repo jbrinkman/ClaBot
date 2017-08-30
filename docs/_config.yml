@@ -1,3 +1,5 @@
 theme: jekyll-theme-modernist
 name: CLA Bot
 markdown: kramdown
+title: CLA Bot Documentation
+description: CLA Bot will validate that pull request contributors have a signed license agreement on file.
