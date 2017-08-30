@@ -7,6 +7,11 @@
     width: 100%;
 }
 
+.header p {
+    width: 70%;
+    min-width: 300px;
+}
+
 @media (min-width: 576px) {
     .wrapper {
         max-width: 540px;
