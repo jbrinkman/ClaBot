@@ -1,2 +1,5 @@
 obj/
 bin/
+local.settings.json
+Webhook.json
+.vs/
