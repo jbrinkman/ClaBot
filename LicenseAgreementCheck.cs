@@ -9,13 +9,15 @@ using Microsoft.Azure.Documents.Client;
 using ClaBot.Models.Github;
 using Refit;
 using ClaBot.Services.Github;
+using ClaBot.Controllers;
+using System.Collections.Generic;
+using ClaBot.Models;
 
 namespace ClaBot
 {
     public static class LicenseAgreementCheck
     {
-        static string EndpointUrl = ConfigurationManager.AppSettings["Endpoint"]; //"https://clabot.documents.azure.com:443/";
-        static string PrimaryKey = ConfigurationManager.AppSettings["PrimaryKey"]; //"YGtMB7XCrX5LLRBaOlQwRSsUeF50FivoKkm1b6DIz1vI9hRfg5XfjEa0g7yoWKACM1Cuv8qWoA9KVEVs9ITGvQ==";
+
 
         [FunctionName("LicenseAgreementCheck")]
         public static async Task<HttpResponseMessage> Run([HttpTrigger(WebHookType = "github")]HttpRequestMessage req, TraceWriter log)
@@ -25,12 +27,13 @@ namespace ClaBot
             string json = await req.Content.ReadAsStringAsync();
             GithubEvent githubEvent = json.FromJson<GithubEvent>();
 
-            using (DocumentClient client = new DocumentClient(new System.Uri(EndpointUrl), PrimaryKey)){
-                Document logDocument = await client.UpsertDocumentAsync(UriFactory.CreateDocumentCollectionUri("clabot", "infolog"), githubEvent);
-            }
+            await LogController.Instance().AddLogAsync(LogType.WebHook, githubEvent);
 
-            var gitHubApi = RestService.For<IGitHubApi>("https://api.github.com");
-            var statuses = await gitHubApi.GetStatuses(githubEvent.Repository.Owner, githubEvent.Repository.Name, githubEvent.PullRequest.Head.Sha);
+            AccessToken token = await AuthController.Instance().GetAccessToken(githubEvent.Repository.Owner, githubEvent.Repository.Name, githubEvent.Installation.Id);
+
+            List<Status> stats = await StatusController.SetPendingStatusAsync(githubEvent.Repository.Owner, githubEvent.Repository.Name, githubEvent.PullRequest.Head.Sha, token);
+
+            await LogController.Instance().AddLogAsync(LogType.Status, stats);
 
             return req.CreateResponse(HttpStatusCode.OK, $"From Github: {githubEvent?.PullRequest?.Title}");
         }

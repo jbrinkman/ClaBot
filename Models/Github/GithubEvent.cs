@@ -15,5 +15,7 @@ namespace ClaBot.Models.Github
 
         [JsonProperty("repository")]
         public Repository Repository { get; set; }
+
+        public Installation Installation { get; set; }
     }
 }

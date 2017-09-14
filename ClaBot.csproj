@@ -3,6 +3,8 @@
     <TargetFramework>net461</TargetFramework>
   </PropertyGroup>
   <ItemGroup>    
+    <PackageReference Include="BouncyCastle" Version="1.8.1" />    
+    <PackageReference Include="jose-jwt" Version="2.4.0" />    
     <PackageReference Include="Microsoft.Azure.DocumentDB" Version="1.17.0" />    
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.2" />    
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />    
@@ -17,6 +19,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="local.settings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="private-key.pem">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Properties\Settings.settings">
