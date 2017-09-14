@@ -3,3 +3,4 @@ bin/
 local.settings.json
 Webhook.json
 .vs/
+private-key.pem
