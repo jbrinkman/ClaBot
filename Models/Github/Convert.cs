@@ -12,7 +12,7 @@ namespace ClaBot.Models.Github
             return JsonConvert.DeserializeObject<T>(json, Settings);
         }
 
-        public static string ToJson<T>(this T o) where T: IModel
+        public static string ToJson<T>(this T o)
         {
             return JsonConvert.SerializeObject(o, Settings);
         }

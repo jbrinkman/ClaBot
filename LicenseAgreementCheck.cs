@@ -31,9 +31,11 @@ namespace ClaBot
 
             AccessToken token = await AuthController.Instance().GetAccessToken(githubEvent.Repository.Owner, githubEvent.Repository.Name, githubEvent.Installation.Id);
 
-            List<Status> stats = await StatusController.SetPendingStatusAsync(githubEvent.Repository.Owner, githubEvent.Repository.Name, githubEvent.PullRequest.Head.Sha, token);
+            Status status = await StatusController.Instance().SetPendingStatusAsync(githubEvent.Repository.Owner, githubEvent.Repository.Name, githubEvent.PullRequest.Head.Sha, token);
 
-            await LogController.Instance().AddLogAsync(LogType.Status, stats);
+            //TODO: Loop through each commit and verify license
+
+            status = await StatusController.Instance().SetStatusAsync(githubEvent.Repository.Owner, githubEvent.Repository.Name, githubEvent.PullRequest.Head.Sha, StatusState.success, token);
 
             return req.CreateResponse(HttpStatusCode.OK, $"From Github: {githubEvent?.PullRequest?.Title}");
         }

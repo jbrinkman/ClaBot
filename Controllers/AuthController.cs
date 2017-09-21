@@ -1,24 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 using ClaBot.Models.Github;
-using ClaBot.Services.Github;
 using Jose;
-using Microsoft.Azure.Documents.Client;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Security;
-using Refit;
 
 namespace ClaBot.Controllers
 {
-    public class AuthController
+    public class AuthController: GitHubControllerBase
     {
         string AppId => ConfigurationManager.AppSettings["AppId"];
 
@@ -32,8 +26,7 @@ namespace ClaBot.Controllers
             {
                 string issuerClaim = GetIssuerClaimJWT();
 
-                IGitHubApi gitHubApi = RestService.For<IGitHubApi>("https://api.github.com");
-                AccessToken token = await gitHubApi.GetAccessToken(InstallationId, $"Bearer {issuerClaim}");
+                AccessToken token = await GitHubApi.GetAccessToken(InstallationId, $"Bearer {issuerClaim}");
                 if (token != null)
                 {
                     tokenDocument = token;
